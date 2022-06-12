@@ -47,18 +47,6 @@ public class EnemyManager {
 
 	}
 
-//	private void tempMethod() {
-//		int[][] arr = Utilz.GetRoadDirArr(playing.getGame().getTileManager().getTypeArr(), start, end);
-//
-//		for (int j = 0; j < arr.length; j++) {
-//			for (int i = 0; i < arr[j].length; i++) {
-//				System.out.print(arr[j][i] + "|");
-//			}
-//			System.out.println();
-//		}
-//
-//	}
-
 	private void loadEffectImg() {
 		slowEffect = LoadSave.getSpriteAtlas().getSubimage(32 * 9, 32 * 2, 32, 32);
 	}
@@ -73,7 +61,6 @@ public class EnemyManager {
 	public void update() {
 		for (Enemy e : enemies)
 			if (e.isAlive()) {
-//				updateEnemyMove(e);
 				updateEnemyMoveNew(e);
 			}
 
@@ -123,23 +110,6 @@ public class EnemyManager {
 			if (currTile.getyCord() == newTile.getyCord())
 				return true;
 		return false;
-	}
-
-	public void updateEnemyMove(Enemy e) {
-		if (e.getLastDir() == -1)
-			setNewDirectionAndMove(e);
-
-		int newX = (int) (e.getX() + getSpeedAndWidth(e.getLastDir(), e.getEnemyType()));
-		int newY = (int) (e.getY() + getSpeedAndHeight(e.getLastDir(), e.getEnemyType()));
-
-		if (getTileType(newX, newY) == ROAD_TILE) {
-			e.move(GetSpeed(e.getEnemyType()), e.getLastDir());
-		} else if (isAtEnd(e)) {
-			e.kill();
-			playing.removeOneLife();
-		} else {
-			setNewDirectionAndMove(e);
-		}
 	}
 
 	private void setNewDirectionAndMove(Enemy e) {

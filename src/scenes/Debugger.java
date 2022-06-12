@@ -29,6 +29,8 @@ public class Debugger {
             g.setColor(Color.WHITE);
             g.drawString("FPS: "+game.FPS, 20, 20);
             g.drawString("TICKS: "+game.TICKS, 20, 20+15);
+            g.drawString("Enemys "+game.getPlaying().getEnemyManger().getEnemies().toString(), 20, 20+15*2);
+            g.drawString("ProjMan "+game.getPlaying().getProjManager(), 20, 20+15*3);
         }
     }
 }

@@ -50,6 +50,10 @@ public class Playing extends GameScene implements SceneMethods {
 		end = points.get(1);
 	}
 
+	public ProjectileManager getProjManager(){
+		return this.projManager;
+	}
+
 	public void setLevel(int[][] lvl) {
 		this.lvl = lvl;
 	}
