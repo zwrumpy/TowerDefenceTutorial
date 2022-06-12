@@ -138,11 +138,6 @@ public class ProjectileManager {
 		return null;
 	}
 
-
-	private boolean isProjHittingEnemy(Projectile p, Enemy e) {
-		return e.isAlive() && e.getBounds().contains(p.getPos());
-	}
-
 	private void damageEnemy(Projectile projectile, Enemy enemy) {
 
 		if (projectile.getProjectileType() == CHAINS) {
@@ -156,6 +151,12 @@ public class ProjectileManager {
 			explosions.add(new Explosion(projectile.getPos()));
 			explodeOnEnemies(projectile);
 			enemy.hurt(projectile.getDmg());
+			return;
+		}
+
+		if (projectile.getProjectileType() == ARROW) {
+			if (getEnemyHit(projectile) != null && getEnemyHit(projectile).getID() == 1)
+				enemy.hurt(projectile.getDmg()*2);
 			return;
 		}
 
@@ -192,6 +193,7 @@ public class ProjectileManager {
 				}
 
 				if (p.getProjectileType() == CHAINS) {
+
 					g2d.drawImage(proj_imgs[p.getProjectileType()], (int) p.getPos().x - 16, (int) p.getPos().y - 16, null);
 				}
 			}
