@@ -92,12 +92,9 @@ public class ProjectileManager {
 		for (Projectile p : projectiles)
 			if (p.isActive()) {
 				p.move();
+
 				if (isProjHittingEnemy(p)) {
 					p.setActive(false);
-					if (p.getProjectileType() == BOMB) {
-						explosions.add(new Explosion(p.getPos()));
-						explodeOnEnemies(p);
-					}
 				} else if (isProjOutsideBounds(p)) {
 					p.setActive(false);
 				}
@@ -106,7 +103,6 @@ public class ProjectileManager {
 		for (Explosion e : explosions)
 			if (e.getIndex() < 7)
 				e.update();
-
 	}
 
 	private void explodeOnEnemies(Projectile p) {
@@ -122,23 +118,37 @@ public class ProjectileManager {
 				if (realDist <= radius)
 					e.hurt(p.getDmg());
 			}
-
 		}
-
 	}
 
 	private boolean isProjHittingEnemy(Projectile p) {
 		for (Enemy e : playing.getEnemyManger().getEnemies()) {
-			if (e.isAlive())
-				if (e.getBounds().contains(p.getPos())) {
-					e.hurt(p.getDmg());
-					if (p.getProjectileType() == CHAINS)
-						e.slow();
+			if (e.isAlive() && e.getBounds().contains(p.getPos())) {
+				damageEnemy(p, e);
+				return true;
+			}
 
-					return true;
-				}
 		}
 		return false;
+	}
+
+	private void damageEnemy(Projectile projectile, Enemy enemy) {
+
+		if (projectile.getProjectileType() == CHAINS) {
+			enemy.slow();
+			enemy.hurt(projectile.getDmg());
+			return;
+		}
+
+		if (projectile.getProjectileType() == BOMB) {
+			if (enemy.getID() == 1) return;
+			explosions.add(new Explosion(projectile.getPos()));
+			explodeOnEnemies(projectile);
+			enemy.hurt(projectile.getDmg());
+			return;
+		}
+
+		enemy.hurt(projectile.getDmg());
 	}
 
 	private boolean isProjOutsideBounds(Projectile p) {

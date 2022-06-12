@@ -4,11 +4,7 @@ import javax.swing.JFrame;
 
 import helpz.LoadSave;
 import managers.TileManager;
-import scenes.Editing;
-import scenes.GameOver;
-import scenes.Menu;
-import scenes.Playing;
-import scenes.Settings;
+import scenes.*;
 
 public class Game extends JFrame implements Runnable {
 
@@ -25,8 +21,12 @@ public class Game extends JFrame implements Runnable {
 	private Settings settings;
 	private Editing editing;
 	private GameOver gameOver;
+	private Debugger debugger;
 
 	private TileManager tileManager;
+
+	public int FPS;
+	public int TICKS;
 
 	public Game() {
 
@@ -38,7 +38,7 @@ public class Game extends JFrame implements Runnable {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setResizable(false);
-		setTitle("Your Game");
+		setTitle("Choco TD");
 		add(gameScreen);
 		pack();
 		setVisible(true);
@@ -63,7 +63,7 @@ public class Game extends JFrame implements Runnable {
 		settings = new Settings(this);
 		editing = new Editing(this);
 		gameOver = new GameOver(this);
-
+		debugger = new Debugger(this);
 	}
 
 	private void start() {
@@ -130,12 +130,13 @@ public class Game extends JFrame implements Runnable {
 				updates++;
 			}
 
-//			if (System.currentTimeMillis() - lastTimeCheck >= 1000) {
-//				System.out.println("FPS: " + frames + " | UPS: " + updates);
-//				frames = 0;
-//				updates = 0;
-//				lastTimeCheck = System.currentTimeMillis();
-//			}
+			if (System.currentTimeMillis() - lastTimeCheck >= 1000) {
+				FPS = frames;
+				TICKS = updates;
+				frames = 0;
+				updates = 0;
+				lastTimeCheck = System.currentTimeMillis();
+			}
 
 		}
 
@@ -165,7 +166,9 @@ public class Game extends JFrame implements Runnable {
 	public GameOver getGameOver() {
 		return gameOver;
 	}
-
+	public Debugger getDebugger() {
+		return debugger;
+	}
 	public TileManager getTileManager() {
 		return tileManager;
 	}

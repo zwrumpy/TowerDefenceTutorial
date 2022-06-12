@@ -22,6 +22,11 @@ public class KeyboardListener implements KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_F3) {
+			if (game.getDebugger().isDebugging()) game.getDebugger().setDebugging(false);
+			else game.getDebugger().setDebugging(true);
+		}
+
 		if (GameStates.gameState == EDIT)
 			game.getEditor().keyPressed(e);
 		else if (GameStates.gameState == PLAYING)
