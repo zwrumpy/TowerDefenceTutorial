@@ -199,13 +199,13 @@ public class EnemyManager {
 			enemies.add(new Orc(x, y, 0, this));
 			break;
 		case BAT:
-			enemies.add(new Bat(x, y, 0, this));
+			enemies.add(new Bat(x, y, 1, this));
 			break;
 		case KNIGHT:
-			enemies.add(new Knight(x, y, 0, this));
+			enemies.add(new Knight(x, y, 2, this));
 			break;
 		case WOLF:
-			enemies.add(new Wolf(x, y, 0, this));
+			enemies.add(new Wolf(x, y, 3, this));
 			break;
 		}
 

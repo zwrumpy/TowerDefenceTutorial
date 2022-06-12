@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import enemies.Enemy;
 import helpz.LoadSave;
 import objects.Tower;
+import scenes.Debugger;
 import scenes.Playing;
 
 public class TowerManager {
@@ -55,18 +56,18 @@ public class TowerManager {
 		for (Enemy e : playing.getEnemyManger().getEnemies()) {
 			if (e.isAlive())
 				if (isEnemyInRange(t, e)) {
+					Debugger.setEnemyId(e.getID());
 					if (t.isCooldownOver()) {
 						playing.shootEnemy(t, e);
 						t.resetCooldown();
 					}
-				} else {
-					// we do nothing
-				}
+				} else {}
 		}
 
 	}
 
 	private boolean isEnemyInRange(Tower t, Enemy e) {
+
 		int range = helpz.Utilz.GetHypoDistance(t.getX(), t.getY(), e.getX(), e.getY());
 		return range < t.getRange();
 	}

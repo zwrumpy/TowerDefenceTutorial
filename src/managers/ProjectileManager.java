@@ -132,6 +132,17 @@ public class ProjectileManager {
 		return false;
 	}
 
+	private Enemy getEnemyHit(Projectile p) {
+		for (Enemy e : playing.getEnemyManger().getEnemies())
+			if (e.isAlive() && e.getBounds().contains(p.getPos())) return e;
+		return null;
+	}
+
+
+	private boolean isProjHittingEnemy(Projectile p, Enemy e) {
+		return e.isAlive() && e.getBounds().contains(p.getPos());
+	}
+
 	private void damageEnemy(Projectile projectile, Enemy enemy) {
 
 		if (projectile.getProjectileType() == CHAINS) {
@@ -171,7 +182,16 @@ public class ProjectileManager {
 					g2d.drawImage(proj_imgs[p.getProjectileType()], -16, -16, null);
 					g2d.rotate(-Math.toRadians(p.getRotation()));
 					g2d.translate(-p.getPos().x, -p.getPos().y);
-				} else {
+					return;
+				}
+
+				if (p.getProjectileType() == BOMB) {
+					if (getEnemyHit(p) != null && getEnemyHit(p).getID() != 1) {
+						g2d.drawImage(proj_imgs[p.getProjectileType()], (int) p.getPos().x - 16, (int) p.getPos().y - 16, null);
+					}
+				}
+
+				if (p.getProjectileType() == CHAINS) {
 					g2d.drawImage(proj_imgs[p.getProjectileType()], (int) p.getPos().x - 16, (int) p.getPos().y - 16, null);
 				}
 			}
