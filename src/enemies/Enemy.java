@@ -12,14 +12,14 @@ public abstract class Enemy {
 	protected Rectangle bounds;
 	protected int health;
 	protected int maxHealth;
-	protected int ID;
+	protected String ID;
 	protected int enemyType;
 	protected int lastDir;
 	protected boolean alive = true;
 	protected int slowTickLimit = 120;
 	protected int slowTick = slowTickLimit;
 
-	public Enemy(float x, float y, int ID, int enemyType, EnemyManager enemyManager) {
+	public Enemy(float x, float y, String ID, int enemyType, EnemyManager enemyManager) {
 		this.x = x;
 		this.y = y;
 		this.ID = ID;
@@ -111,7 +111,8 @@ public abstract class Enemy {
 		return health;
 	}
 
-	public int getID() {
+	public String getID() {
+		if (ID == null) return "empty";
 		return ID;
 	}
 

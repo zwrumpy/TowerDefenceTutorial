@@ -6,7 +6,7 @@ import managers.EnemyManager;
 
 public class Orc extends Enemy {
 
-	public Orc(float x, float y, int ID, EnemyManager em) {
+	public Orc(float x, float y, String ID, EnemyManager em) {
 		super(x, y, ID, ORC,em);
 	}
 

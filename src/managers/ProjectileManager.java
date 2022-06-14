@@ -127,14 +127,14 @@ public class ProjectileManager {
 				damageEnemy(p, e);
 				return true;
 			}
-
 		}
 		return false;
 	}
 
 	private Enemy getEnemyHit(Projectile p) {
 		for (Enemy e : playing.getEnemyManger().getEnemies())
-			if (e.isAlive() && e.getBounds().contains(p.getPos())) return e;
+			if (e.isAlive() && e.getBounds().contains(p.getPos()))
+				return e;
 		return null;
 	}
 
@@ -147,7 +147,8 @@ public class ProjectileManager {
 		}
 
 		if (projectile.getProjectileType() == BOMB) {
-			if (enemy.getID() == 1) return;
+			if (enemy.getID().equalsIgnoreCase("BAT")) return;
+
 			explosions.add(new Explosion(projectile.getPos()));
 			explodeOnEnemies(projectile);
 			enemy.hurt(projectile.getDmg());
@@ -155,7 +156,7 @@ public class ProjectileManager {
 		}
 
 		if (projectile.getProjectileType() == ARROW) {
-			if (getEnemyHit(projectile) != null && getEnemyHit(projectile).getID() == 1)
+			if (getEnemyHit(projectile) != null && getEnemyHit(projectile).getID().equalsIgnoreCase("1"))
 				enemy.hurt(projectile.getDmg()*2);
 			return;
 		}
@@ -186,20 +187,24 @@ public class ProjectileManager {
 					return;
 				}
 
-				if (p.getProjectileType() == BOMB) {
-					if (getEnemyHit(p) != null && getEnemyHit(p).getID() != 1) {
-						g2d.drawImage(proj_imgs[p.getProjectileType()], (int) p.getPos().x - 16, (int) p.getPos().y - 16, null);
-					}
-				}
+//				if (p.getProjectileType() == BOMB) {
+//					g2d.drawImage(proj_imgs[p.getProjectileType()], (int) p.getPos().x - 16, (int) p.getPos().y - 16, null);
+//					return;
+//				}
 
 				if (p.getProjectileType() == CHAINS) {
-
 					g2d.drawImage(proj_imgs[p.getProjectileType()], (int) p.getPos().x - 16, (int) p.getPos().y - 16, null);
+					return;
 				}
 			}
 
-		drawExplosions(g2d);
+//		drawExplosions(g2d);
+	}
 
+
+	public boolean isTargeted(Projectile p, String EnemyID){
+		if (getEnemyHit(p) == null) return false;
+		return getEnemyHit(p).getID().equalsIgnoreCase(EnemyID);
 	}
 
 	private void drawExplosions(Graphics2D g2d) {

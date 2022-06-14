@@ -196,19 +196,18 @@ public class EnemyManager {
 
 		switch (enemyType) {
 		case ORC:
-			enemies.add(new Orc(x, y, 0, this));
+			enemies.add(new Orc(x, y, "ORC", this));
 			break;
 		case BAT:
-			enemies.add(new Bat(x, y, 1, this));
+			enemies.add(new Bat(x, y, "BAT", this));
 			break;
 		case KNIGHT:
-			enemies.add(new Knight(x, y, 2, this));
+			enemies.add(new Knight(x, y, "KNIGHT", this));
 			break;
 		case WOLF:
-			enemies.add(new Wolf(x, y, 3, this));
+			enemies.add(new Wolf(x, y, "WOLF", this));
 			break;
 		}
-
 	}
 
 	public void draw(Graphics g) {

@@ -6,7 +6,7 @@ import managers.EnemyManager;
 
 public class Knight extends Enemy {
 
-	public Knight(float x, float y, int ID,EnemyManager em) {
+	public Knight(float x, float y, String ID,EnemyManager em) {
 		super(x, y, ID, KNIGHT,em);
 		
 	}

@@ -14,6 +14,7 @@ import managers.TowerManager;
 import managers.WaveManager;
 import objects.PathPoint;
 import objects.Tower;
+import projectiles.Bomb;
 import ui.ActionBar;
 import static helpz.Constants.Tiles.GRASS_TILE;
 
@@ -29,6 +30,7 @@ public class Playing extends GameScene implements SceneMethods {
 	private WaveManager waveManager;
 	private PathPoint start, end;
 	private Tower selectedTower;
+	private Bomb bomb;
 	private int goldTick;
 	private boolean gamePaused;
 
@@ -41,6 +43,7 @@ public class Playing extends GameScene implements SceneMethods {
 		towerManager = new TowerManager(this);
 		projManager = new ProjectileManager(this);
 		waveManager = new WaveManager(this);
+		bomb = new Bomb(this);
 	}
 
 	private void loadDefaultLevel() {
@@ -88,7 +91,22 @@ public class Playing extends GameScene implements SceneMethods {
 			enemyManager.update();
 			towerManager.update();
 			projManager.update();
+			bomb.update();
 		}
+
+	}
+
+	@Override
+	public void render(Graphics g) {
+
+		drawLevel(g);
+		actionBar.draw(g);
+		enemyManager.draw(g);
+		towerManager.draw(g);
+		projManager.draw(g);
+		bomb.draw(g);
+		drawSelectedTower(g);
+		drawHighlight(g);
 
 	}
 
@@ -131,19 +149,7 @@ public class Playing extends GameScene implements SceneMethods {
 		this.selectedTower = selectedTower;
 	}
 
-	@Override
-	public void render(Graphics g) {
 
-		drawLevel(g);
-		actionBar.draw(g);
-		enemyManager.draw(g);
-		towerManager.draw(g);
-		projManager.draw(g);
-
-		drawSelectedTower(g);
-		drawHighlight(g);
-
-	}
 
 	private void drawHighlight(Graphics g) {
 		g.setColor(Color.WHITE);

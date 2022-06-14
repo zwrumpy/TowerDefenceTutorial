@@ -56,7 +56,7 @@ public class TowerManager {
 		for (Enemy e : playing.getEnemyManger().getEnemies()) {
 			if (e.isAlive())
 				if (isEnemyInRange(t, e)) {
-					Debugger.setEnemyId(e.getID());
+					Debugger.setEnemyId(""+e.getID());
 					if (t.isCooldownOver()) {
 						playing.shootEnemy(t, e);
 						t.resetCooldown();
