@@ -19,7 +19,6 @@ public class ProjectileManager {
 
 	private Playing playing;
 	private ArrayList<Projectile> projectiles = new ArrayList<>();
-	private ArrayList<Explosion> explosions = new ArrayList<>();
 	private BufferedImage[] proj_imgs, explo_imgs;
 	private int proj_id = 0;
 
@@ -99,10 +98,6 @@ public class ProjectileManager {
 					p.setActive(false);
 				}
 			}
-
-		for (Explosion e : explosions)
-			if (e.getIndex() < 7)
-				e.update();
 	}
 
 	private void explodeOnEnemies(Projectile p) {
@@ -146,15 +141,6 @@ public class ProjectileManager {
 			return;
 		}
 
-		if (projectile.getProjectileType() == BOMB) {
-			if (enemy.getID().equalsIgnoreCase("BAT")) return;
-
-			explosions.add(new Explosion(projectile.getPos()));
-			explodeOnEnemies(projectile);
-			enemy.hurt(projectile.getDmg());
-			return;
-		}
-
 		if (projectile.getProjectileType() == ARROW) {
 			if (getEnemyHit(projectile) != null && getEnemyHit(projectile).getID().equalsIgnoreCase("1"))
 				enemy.hurt(projectile.getDmg()*2);
@@ -176,41 +162,22 @@ public class ProjectileManager {
 	public void draw(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
 
-		for (Projectile p : projectiles)
-			if (p.isActive()) {
-				if (p.getProjectileType() == ARROW) {
-					g2d.translate(p.getPos().x, p.getPos().y);
-					g2d.rotate(Math.toRadians(p.getRotation()));
-					g2d.drawImage(proj_imgs[p.getProjectileType()], -16, -16, null);
-					g2d.rotate(-Math.toRadians(p.getRotation()));
-					g2d.translate(-p.getPos().x, -p.getPos().y);
-					return;
-				}
-
-//				if (p.getProjectileType() == BOMB) {
-//					g2d.drawImage(proj_imgs[p.getProjectileType()], (int) p.getPos().x - 16, (int) p.getPos().y - 16, null);
-//					return;
-//				}
-
-				if (p.getProjectileType() == CHAINS) {
-					g2d.drawImage(proj_imgs[p.getProjectileType()], (int) p.getPos().x - 16, (int) p.getPos().y - 16, null);
-					return;
-				}
+		for (Projectile p : projectiles) {
+			if (!p.isActive()) continue;
+			if (p.getProjectileType() == ARROW) {
+				g2d.translate(p.getPos().x, p.getPos().y);
+				g2d.rotate(Math.toRadians(p.getRotation()));
+				g2d.drawImage(proj_imgs[p.getProjectileType()], -16, -16, null);
+				g2d.rotate(-Math.toRadians(p.getRotation()));
+				g2d.translate(-p.getPos().x, -p.getPos().y);
+				return;
 			}
 
-//		drawExplosions(g2d);
-	}
-
-
-	public boolean isTargeted(Projectile p, String EnemyID){
-		if (getEnemyHit(p) == null) return false;
-		return getEnemyHit(p).getID().equalsIgnoreCase(EnemyID);
-	}
-
-	private void drawExplosions(Graphics2D g2d) {
-		for (Explosion e : explosions)
-			if (e.getIndex() < 7)
-				g2d.drawImage(explo_imgs[e.getIndex()], (int) e.getPos().x - 16, (int) e.getPos().y - 16, null);
+			if (p.getProjectileType() == CHAINS) {
+				g2d.drawImage(proj_imgs[p.getProjectileType()], (int) p.getPos().x - 16, (int) p.getPos().y - 16, null);
+				return;
+			}
+		}
 	}
 
 	private int getProjType(Tower t) {
@@ -225,36 +192,8 @@ public class ProjectileManager {
 		return 0;
 	}
 
-	public class Explosion {
-
-		private Point2D.Float pos;
-		private int exploTick, exploIndex;
-
-		public Explosion(Point2D.Float pos) {
-			this.pos = pos;
-		}
-
-		public void update() {
-			exploTick++;
-			if (exploTick >= 6) {
-				exploTick = 0;
-				exploIndex++;
-			}
-		}
-
-		public int getIndex() {
-			return exploIndex;
-		}
-
-		public Point2D.Float getPos() {
-			return pos;
-		}
-	}
-
 	public void reset() {
 		projectiles.clear();
-		explosions.clear();
-
 		proj_id = 0;
 	}
 

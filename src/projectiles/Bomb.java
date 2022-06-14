@@ -6,6 +6,7 @@ import managers.ProjectileManager;
 import objects.Projectile;
 import objects.Tower;
 import scenes.Playing;
+import utils.Print;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -32,12 +33,17 @@ public class Bomb {
     }
 
     public void update() {
-        for (Projectile p : projectiles)
-            if (p.isActive()) {
-                if (isProjHittingEnemy(p)) {
-                    p.setActive(false);
-                }
+
+        for (Projectile p : projectiles) {
+            if (!p.isActive()) continue;
+            if (p.getProjectileType() != BOMB) continue;
+            Print.log("bomb p: "+p.getId());
+            p.move();
+            if (isProjHittingEnemy(p)) {
+                Print.log("bomb udpate");
+                p.setActive(false);
             }
+        }
 
         for (Explosion e : explosions)
             if (e.getIndex() < 7)
@@ -46,16 +52,45 @@ public class Bomb {
 
     public void draw(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
-        for (Projectile p : projectiles)
-            if (p.isActive()) {
-                if (p.getProjectileType() == BOMB) {
-                    g2d.drawImage(proj_imgs[p.getProjectileType()], (int) p.getPos().x - 16, (int) p.getPos().y - 16, null);
-                    return;
-                }
-            }
+        for (Projectile p : projectiles) {
+            if (!p.isActive()) continue;
+            if (p.getProjectileType() != BOMB) continue;
+            Print.log("draw");
+            g2d.drawImage(proj_imgs[p.getProjectileType()], (int) p.getPos().x - 16, (int) p.getPos().y - 16, null);
+        }
         drawExplosions(g2d);
     }
 
+    public void newProjectile(Tower t, Enemy e) {
+        int type = getProjType(t);
+
+        int xDist = (int) (t.getX() - e.getX());
+        int yDist = (int) (t.getY() - e.getY());
+        int totDist = Math.abs(xDist) + Math.abs(yDist);
+
+        float xPer = (float) Math.abs(xDist) / totDist;
+
+        float xSpeed = xPer * helpz.Constants.Projectiles.GetSpeed(type);
+        float ySpeed = helpz.Constants.Projectiles.GetSpeed(type) - xSpeed;
+
+        if (t.getX() > e.getX())
+            xSpeed *= -1;
+        if (t.getY() > e.getY())
+            ySpeed *= -1;
+
+        float rotate = 0;
+
+
+        for (Projectile p : projectiles)
+            if (!p.isActive())
+                if (p.getProjectileType() == type) {
+                    p.reuse(t.getX() + 16, t.getY() + 16, xSpeed, ySpeed, t.getDmg(), rotate);
+                    return;
+                }
+
+        projectiles.add(new Projectile(t.getX() + 16, t.getY() + 16, xSpeed, ySpeed, t.getDmg(), rotate, proj_id++, type));
+
+    }
 
     private void importImgs() {
         BufferedImage atlas = LoadSave.getSpriteAtlas();
@@ -76,7 +111,7 @@ public class Bomb {
 
     private void damageEnemy(Projectile projectile, Enemy enemy) {
         if (projectile.getProjectileType() == BOMB) {
-
+            Print.log("damage enemy");
             explosions.add(new Explosion(projectile.getPos()));
             explodeOnEnemies(projectile);
             enemy.hurt(projectile.getDmg());
@@ -106,7 +141,17 @@ public class Bomb {
     }
 
 
-
+    private int getProjType(Tower t) {
+        switch (t.getTowerType()) {
+            case ARCHER:
+                return ARROW;
+            case CANNON:
+                return BOMB;
+            case WIZARD:
+                return CHAINS;
+        }
+        return 0;
+    }
 
     private boolean isProjHittingEnemy(Projectile p) {
         for (Enemy e : playing.getEnemyManger().getEnemies()) {

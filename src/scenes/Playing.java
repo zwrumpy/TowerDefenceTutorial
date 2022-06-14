@@ -242,7 +242,7 @@ public class Playing extends GameScene implements SceneMethods {
 
 	public void shootEnemy(Tower t, Enemy e) {
 		projManager.newProjectile(t, e);
-
+		bomb.newProjectile(t, e);
 	}
 
 	public void setGamePaused(boolean gamePaused) {
